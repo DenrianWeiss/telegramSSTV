@@ -9,7 +9,7 @@ import telebot
 import requests
 import os
 from io import BytesIO
-from PIL import Image
+from PIL import Image, ImageOps
 
 from config import *
 
@@ -31,9 +31,11 @@ def resize_img_with_padding(picture: Image, width: int, height: int) -> Image:
     return resized
 
 # SSTV helper function
-def sstv_convert(picture: Image):
+def sstv_convert(picture: Image) -> BytesIO :
+    result = BytesIO()
     sstv = sstvutil.Robot36(resize_img_with_padding(picture, 320, 240), 48000, 16)
-    sstv.write_wav('tmp/sstvbot/114514.wav')
+    sstv.write_wav(result)
+    return result
 
 # Help info
 @bot.message_handler(content_types=['text'], commands=['start', 'help'])
@@ -47,12 +49,12 @@ def sstv_encode(message):
     file_url = bot.get_file_url(message.photo[0].file_id)
     received_img = Image.open(BytesIO(requests.get(file_url).content))
 
-    sstv_convert(received_img)
-    bot.send_document(message.chat.id, 'tmp/sstvbot/114514.wav' , reply_to_message_id = message.message_id)
-    os.remove('tmp/sstvbot/114514.wav')
+    convert_result = sstv_convert(received_img)
+    convert_result.seek(0)
+    print(convert_result)
+    bot.send_document(message.chat.id, convert_result.read(), reply_to_message_id = message.message_id)
+    print(convert_result)
+    convert_result.close()
     received_img.close()
 
-os.system('rm -rf tmp')
-os.mkdir('tmp')
-os.mkdir('tmp/sstvbot')
-bot.polling()
+bot.polling(none_stop=True)
