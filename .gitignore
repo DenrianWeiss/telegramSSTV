@@ -145,3 +145,4 @@ dmypy.json
 config/*
 !config/__init__.py.example
 venv
+tmp

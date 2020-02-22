@@ -48,10 +48,20 @@ def sstv_encode(message):
     received_img = Image.open(BytesIO(requests.get(file_url).content))
 
     sstv_convert(received_img)
-    bot.send_document(message.chat.id, 'tmp/sstvbot/114514.wav' , reply_to_message_id = message.message_id)
+    bot.send_document(message.chat.id, 'tmp/sstvbot/114514.wav' , reply_to_message_id = message.message_id, )
     os.remove('tmp/sstvbot/114514.wav')
     received_img.close()
 
-os.remove('tmp/sstvbot')
+try:
+    os.rmdir('tmp/sstvbot')
+except FileNotFoundError:
+    pass
+
+try:
+    os.rmdir('tmp')
+except FileNotFoundError:
+    pass
+
 os.mkdir('tmp')
+os.mkdir('tmp/sstvbot')
 bot.polling()
