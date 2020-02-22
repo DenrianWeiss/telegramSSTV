@@ -9,7 +9,7 @@ import telebot
 import requests
 import os
 from io import BytesIO
-from PIL import Image, ImageOps
+from PIL import Image
 
 from config import *
 
