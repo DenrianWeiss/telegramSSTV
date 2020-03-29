@@ -1,5 +1,7 @@
 # Telegram SSTV Bot
 
+[![CodeFactor](https://www.codefactor.io/repository/github/denrianweiss/telegramsstv/badge/master)](https://www.codefactor.io/repository/github/denrianweiss/telegramsstv/overview/master)  
+
 This is a simple script to work as a converter bot for image and SSTV signal
 
 ## How to set up
